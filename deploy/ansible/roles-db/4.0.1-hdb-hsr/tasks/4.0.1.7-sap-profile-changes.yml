@@ -19,7 +19,7 @@
 
     - name:                            "HSR Install: Set the DB virtual_host name"
       ansible.builtin.set_fact:
-        db_lb_virtual_host:            "{% if db_high_availability %}{{ sap_sid | lower }}{{ db_sid | lower }}db{{ hdb_instance_number }}cl{% else %}{{ hostvars[db_server_temp | first]['virtual_host'] }}{% endif %}"
+        db_lb_virtual_host:            "{% if db_high_availability %}{{ sap_sid | lower }}{{ db_sid | lower }}db{{ db_instance_number }}cl{% else %}{{ hostvars[db_server_temp | first]['virtual_host'] }}{% endif %}"
       when:
         - db_high_availability
         - db_server_temp is defined
