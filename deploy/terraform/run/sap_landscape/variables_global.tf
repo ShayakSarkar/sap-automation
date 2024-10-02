@@ -62,3 +62,24 @@ variable "dns_label"                   {
                                          description = "DNS label"
                                          default     = ""
                                        }
+variable "vis_subscription_id"         {
+                                         type        = string
+                                         description = "Customer subscription id where VIS is deployed."
+                                       }
+
+variable "vis_tenant_id"               {
+                                         type        = string
+                                         description = "Customer subscription tenant id."
+                                       }
+
+variable "vis_msi_client_id"           {
+                                         type        = string
+                                         description = "VIS MI client id."
+                                         sensitive   = true
+                                       }
+
+variable "user_msi_certificate"        {
+                                         type		  = string
+                                         description = "The user msi certificate"
+                                         sensitive   = true
+                                       }

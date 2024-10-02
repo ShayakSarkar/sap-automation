@@ -53,3 +53,6 @@ Importer/SDAF SDU Importer/SDAFSDUImporter/bin
 __pycache__/
 __pycache__
 *.pyc
+
+# executable files
+*.exe

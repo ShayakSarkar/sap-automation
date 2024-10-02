@@ -14,7 +14,7 @@
 
 provider "azurerm"                     {
                                          features {}
-                                         subscription_id = length(local.deployer_subscription_id) > 0 ? local.deployer_subscription_id : null
+                                         subscription_id = var.vis_subscription_id
                                        }
 
 provider "azurerm"                     {
@@ -29,35 +29,33 @@ provider "azurerm"                     {
                                                                  purge_soft_deleted_certificates_on_destroy = !var.enable_purge_control_for_keyvaults
                                                               }
                                                   }
-                                         subscription_id = data.azurerm_key_vault_secret.subscription_id.value
-                                         client_id       = try(data.terraform_remote_state.landscape.outputs.use_spn, true) && var.use_spn ? local.spn.client_id : null
-                                         client_secret   = try(data.terraform_remote_state.landscape.outputs.use_spn, true) && var.use_spn ? local.spn.client_secret : null
-                                         tenant_id       = try(data.terraform_remote_state.landscape.outputs.use_spn, true) && var.use_spn ? local.spn.tenant_id : null
-                                         use_msi         = try(data.terraform_remote_state.landscape.outputs.use_spn, true) && var.use_spn ? false : true
+                                         subscription_id            = var.vis_subscription_id
+                                         client_id                  = var.vis_msi_client_id
+                                         client_certificate         = var.user_msi_certificate
+                                         tenant_id                  = var.vis_tenant_id
 
-                                         partner_id = "3179cd51-f54b-4c73-ac10-8e99417efce7"
-                                         alias      = "system"
+                                         partner_id                 = "3179cd51-f54b-4c73-ac10-8e99417efce7"
+                                         alias                      = "system"
                                          skip_provider_registration = true
                                        }
 
 provider "azurerm"                     {
                                          features {}
                                          alias                      = "dnsmanagement"
-                                         subscription_id            = coalesce(try(data.terraform_remote_state.landscape.outputs.management_dns_subscription_id,""), var.management_dns_subscription_id, length(local.deployer_subscription_id) > 0 ? local.deployer_subscription_id : "")
-                                         client_id                  = try(data.terraform_remote_state.landscape.outputs.use_spn, true) && var.use_spn ? local.cp_spn.client_id : null
-                                         client_secret              = try(data.terraform_remote_state.landscape.outputs.use_spn, true) && var.use_spn ? local.cp_spn.client_secret : null
-                                         tenant_id                  = try(data.terraform_remote_state.landscape.outputs.use_spn, true) && var.use_spn ? local.cp_spn.tenant_id : null
-                                         use_msi                    = try(data.terraform_remote_state.landscape.outputs.use_spn, true) && var.use_spn ? false : true
+                                         subscription_id            = var.vis_subscription_id
+                                         client_id                  = var.vis_msi_client_id
+                                         client_certificate         = var.user_msi_certificate
+                                         tenant_id                  = var.vis_tenant_id
+
                                          skip_provider_registration = true
                                        }
 
 
 
 provider "azuread"                     {
-                                         client_id     = try(data.terraform_remote_state.landscape.outputs.use_spn, true) && var.use_spn ? local.spn.client_id : null
-                                         client_secret = try(data.terraform_remote_state.landscape.outputs.use_spn, true) && var.use_spn ? local.spn.client_secret : null
-                                         tenant_id     = local.spn.tenant_id
-                                         use_msi                    = try(data.terraform_remote_state.landscape.outputs.use_spn, true) && var.use_spn ? false : true
+                                         client_id            = var.vis_msi_client_id
+                                         client_certificate   = var.user_msi_certificate
+                                         tenant_id            = var.vis_tenant_id
                                        }
 terraform                              {
                                          required_version = ">= 1.0"

@@ -14,8 +14,8 @@
 
 provider "azurerm"                     {
                                          features {}
-                                         subscription_id = length(local.deployer_subscription_id) > 0 ? local.deployer_subscription_id : null
-                                         use_msi             = var.use_spn ? false : true
+                                         subscription_id = var.vis_subscription_id
+
                                          skip_provider_registration = true
                                        }
 
@@ -31,11 +31,10 @@ provider "azurerm"                     {
                                                                  purge_soft_deleted_certificates_on_destroy = !var.enable_purge_control_for_keyvaults
                                                               }
                                                   }
-                                         subscription_id     = data.azurerm_key_vault_secret.subscription_id.value
-                                         client_id           = var.use_spn ? local.spn.client_id : null
-                                         client_secret       = var.use_spn ? local.spn.client_secret : null
-                                         tenant_id           = var.use_spn ? local.spn.tenant_id : null
-                                         use_msi             = var.use_spn ? false : true
+                                         subscription_id     = var.vis_subscription_id
+                                         client_id           = var.vis_msi_client_id
+                                         client_certificate  = var.user_msi_certificate
+                                         tenant_id           = var.vis_tenant_id
 
                                          partner_id = "25c87b5f-716a-4067-bcd8-116956916dd6"
                                          alias      = "workload"
@@ -45,11 +44,11 @@ provider "azurerm"                     {
 provider "azurerm"                     {
                                          features {}
                                          alias                      = "dnsmanagement"
-                                         subscription_id            = coalesce(var.management_dns_subscription_id, length(local.deployer_subscription_id) > 0 ? local.deployer_subscription_id : "")
-                                         client_id                  = var.use_spn ? local.cp_spn.client_id : null
-                                         client_secret              = var.use_spn ? local.cp_spn.client_secret : null
-                                         tenant_id                  = var.use_spn ? local.cp_spn.tenant_id : null
-                                         use_msi                    = var.use_spn ? false : true
+                                         subscription_id            = var.vis_subscription_id
+                                         client_id                  = var.vis_msi_client_id
+                                         client_certificate         = var.user_msi_certificate
+                                         tenant_id                  = var.vis_tenant_id
+                                         
                                          skip_provider_registration = true
                                        }
 
@@ -61,38 +60,37 @@ ignoring the kubernetes provider registration.
 provider "azurerm"                     {
                                          features {}
                                          alias                      = "kubernetes"
-                                         subscription_id            = coalesce(var.management_dns_subscription_id, length(local.deployer_subscription_id) > 0 ? local.deployer_subscription_id : "")
-                                         client_id                  = var.use_spn ? local.cp_spn.client_id : null
-                                         client_secret              = var.use_spn ? local.cp_spn.client_secret : null
-                                         tenant_id                  = var.use_spn ? local.cp_spn.tenant_id : null
-                                         use_msi                    = var.use_spn ? false : true
+                                         subscription_id            = var.vis_subscription_id
+                                         client_id                  = var.vis_msi_client_id
+                                         client_certificate         = var.user_msi_certificate
+                                         tenant_id                  = var.vis_tenant_id
+                                         
                                          skip_provider_registration = true
                                        }
 
 provider "azurerm"                     {
                                          features {}
-                                         subscription_id            = length(local.deployer_subscription_id) > 0 ? local.deployer_subscription_id : null
-                                         use_msi                    = var.use_spn ? false : true
-                                         client_id                  = var.use_spn ? local.cp_spn.client_id : null
-                                         client_secret              = var.use_spn ? local.cp_spn.client_secret : null
-                                         tenant_id                  = var.use_spn ? local.cp_spn.tenant_id : null
+                                         subscription_id            = var.vis_subscription_id
+                                         
+                                         client_id                  = var.vis_msi_client_id
+                                         client_certificate         = var.user_msi_certificate
+                                         tenant_id                  = var.vis_tenant_id
                                          alias                      = "peering"
                                          skip_provider_registration = true
                                        }
 
 provider "azuread"                     {
-                                         client_id                  = var.use_spn ? local.spn.client_id : null
-                                         client_secret              = var.use_spn ? local.spn.client_secret : null
-                                         tenant_id                  = local.spn.tenant_id
-                                         use_msi                    = var.use_spn ? false : true
+                                         client_id                  = var.vis_msi_client_id
+                                         client_certificate         = var.user_msi_certificate
+                                         tenant_id                  = var.vis_tenant_id
                                        }
 
 provider "azapi"                       {
-                                          alias           = "api"
-                                          subscription_id = local.spn.subscription_id
-                                          client_id       = local.spn.client_id
-                                          client_secret   = local.spn.client_secret
-                                          tenant_id       = local.spn.tenant_id
+                                          alias                = "api"
+                                          subscription_id      = var.vis_subscription_id
+                                          client_id            = var.vis_msi_client_id
+                                          client_certificate   = var.user_msi_certificate
+                                          tenant_id            = var.vis_tenant_id
                                       }
 
 terraform                              {

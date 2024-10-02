@@ -64,7 +64,7 @@ module "common_infrastructure" {
   database                                      = local.database
   database_dual_nics                            = var.database_dual_nics
   deploy_application_security_groups            = var.deploy_application_security_groups
-  deployer_tfstate                              = length(var.deployer_tfstate_key) > 0 ? data.terraform_remote_state.deployer[0].outputs : null
+  deployer_tfstate                              = null
   deployment                                    = var.deployment
   enable_purge_control_for_keyvaults            = var.enable_purge_control_for_keyvaults
   ha_validator                                  = format("%d%d-%s",
